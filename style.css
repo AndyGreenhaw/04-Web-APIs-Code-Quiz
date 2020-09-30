@@ -2,29 +2,66 @@
 div.row > div, header, nav, main {
     outline: 0px solid gray;
     
-    margin-top: 100px;
-    margin-bottom: 100px;
-    margin-left: 100px;
-    margin-right: 100px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
     
-    padding-top: 100px;
-    padding-bottom: 100px;
-    padding-left: 100px;
-    padding-right: 100px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
 } 
 
-body {
-    padding-top: 50px;
-    padding-bottom: 50px;
-    margin-top: 50px;
-    margin-bottom: 50px;
+h1 {
+    font-family: arial;
+    font-size: 48px;
+    color: blue;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
-.button {
-    padding: 10px;
-    margin: 24px;
-    cursor: pointer;
-    font-size: 24px;
-    background-color: #247BA0;
+h2 {
+    font-family: arial;
+    font-size: 16px;
+    color: blue;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+button {
+    margin-top: 20px;
+    margin-bottom: 20px;
     color: white;
-  }
+    background-color: blue;
+    width: 100px;
+    text-align: center;
+}
+
+h3 {
+    font-family: arial;
+    font-size: 32px;
+    color: blue;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    text-align: center
+}
+
+p {
+    text-align: center;
+}
+
+
+
+/* 
+
+h1El.setAttribute("style", "font-family: arial; font-size: 48px; color:blue; margin-top: 20px; margin-bottom: 20px; text-align: center;");
+h2El.setAttribute("style", "font-family: arial; font-size: 24px; margin-top: 20px; margin-bottom: 20px; text-align:center;"); 
+buttonEl.setAttribute("style", "text-align: center; color:white; background-color:blue; width: 100px;");
+pTag.setAttribute("style", "text-align: center;");
+correctText.setAttribute("style", "font-family: arial; font-size: 32px; color:blue; margin-top: 30px; margin-bottom: 20px; text-align: center;");
+incorrectText.setAttribute("style", "font-family: arial; font-size: 32px; color:blue; margin-top: 30px; margin-bottom: 20px; text-align: center;");
+*/
+
