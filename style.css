@@ -1,5 +1,5 @@
 
-div.row > div, header, nav, main {
+/* div.row > div, header, nav, main {
     outline: 0px solid gray;
     
     margin-top: 0px;
@@ -13,7 +13,7 @@ div.row > div, header, nav, main {
     padding-right: 100px;
 
     text-align: center;
-} 
+}  */
 
 h1 {
     font-family: arial;

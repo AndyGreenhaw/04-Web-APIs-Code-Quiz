@@ -6,7 +6,10 @@ var h1El = document.createElement("h1");
 var h2El = document.createElement("h2");
 var buttonEl = document.createElement("button");
 var pTag = document.createElement("p");
+var olEl = document.createElement("ol");
+var liEl = document.createElement("li");
 var answerButton = document.createElement("button");
+var tryAgain = document.createElement("button")
 var correctText = document.createElement("h3");
 var incorrectText = document.createElement("h3");
 var failText = document.createElement("h4");
@@ -91,22 +94,9 @@ var question5 = {
     correctAnswer : "Hypertext Markup Language"
 };
 
-var final = {
-    headline : "Question 5",
-    question : "What does HTML stand for?",
-    possibleAnswers : [
-        "Hyperactive Text Management Language", 
-        "Hypnotic Techno Music Lounge",
-        "Hungry Tigers Mourning Larry",
-        "Hypertext Markup Language",
-        "Hypertext Monkey Language"
-    ],
-    correctAnswer : "Hypertext Markup Language"
-};
-
 //QUESTION ARRAY 
 
-var questionArray = [question1, question2, question3, question4, question5], final;
+var questionArray = [question1, question2, question3, question4, question5]
 
 // TIMER FUNCTION //
 var counter = 60;
@@ -117,40 +107,12 @@ function startCountdown(seconds){
     console.log(counter);
     counter--;
 
-    if (counter < 1){
+    if (counter <= 0){
         counter = 0;
         failure();
     };
-
     }, 1000);
 
-};
-
-//////////////////////////////
-// RIGHT OR WRONG FUNCTIONS //
-//////////////////////////////
-
-// Correct Answer Function //
-function correctAnswer(){
-    resultID.innerHTML="";
-    correctText.textContent = "CORRECT!";
-    resultID.appendChild(correctText);
-    questionInx++
-
-    displayQuestion();
-
-};
-
-// Correct Answer Function //
-function incorrectAnswer(){
-    result.innerHTML="";
-    incorrectText.textContent = "INCORRECT!";
-    resultID.appendChild(incorrectText);
-    counter = (counter-10);  
-    questionInx++
-
-    displayQuestion();
-    
 };
 
 ////////////////
@@ -160,6 +122,12 @@ function incorrectAnswer(){
 startQuiz();
 
 function startQuiz (){
+    //Clear Old Content for Try Again//
+    headlineID.innerHTML="";
+    contentID.innerHTML="";
+    buttonsID.innerHTML="";
+    resultID.innerHTML="";
+    timerID.innerHTML="";
 
     h1El.textContent = "Welcome to my quiz!";
     h2El.textContent = "Push the Start Button to start the quiz, and try to answer the questions within the time limit. Keep in mind, any question you answer wrong will penalize your score time by ten seconds.";
@@ -177,12 +145,6 @@ function startQuiz (){
 
 };
 
-    // display question - CHeck
-    //loop through answers
-    //create a button
-    //put text on the button
-    // put something on that button that says whether it's true or not
-
 //////////////////////////////////////////////////////////
 // QUESTIONS DISPLAY 
 //////////////////////////////////////////////////////////
@@ -190,7 +152,7 @@ function startQuiz (){
 function displayQuestion(e){
     //e.preventDefault();
 
-    //Hides Original Start Button//
+    //Clear Old Content//
     buttonEl.setAttribute("style", "display:none;");
 
     //Populates Each Question//
@@ -198,7 +160,7 @@ function displayQuestion(e){
 
     //After User Completes Last Question, Take Them to Success Page//
     if (questionInx > 4){
-       success();
+       successPage();
     } else {
 
     //Add Headline and Question//
@@ -220,14 +182,11 @@ function displayQuestion(e){
             answerButton.textContent = currentQuestion.possibleAnswers[i];
             buttonsID.appendChild(pTag);
             pTag.appendChild(answerButton);
-            answerButton.setAttribute("value", currentQuestion.possibleAnswers[i])
-
+            answerButton.setAttribute("value", currentQuestion.possibleAnswers[i]);
+            
+            //Console Logging the Loop//
             console.log("LOOP" + answerButton.textContent);
-
         };
-
-    //Console Logging the Loop//
-    console.log("LOOP" + answerButton.textContent);
     
     //User Chooses Answer//
     buttonsID.addEventListener("click", function(e){
@@ -243,23 +202,52 @@ function displayQuestion(e){
             } else if (humanAnswer !== currentQuestion.correctAnswer){
                 incorrectAnswer();
             };
-        }
+        };
         
-    })
-    }
+    });
+    };
 };
 
+//////////////////////////////
+// RIGHT OR WRONG FUNCTIONS //
+//////////////////////////////
+
+// Correct Answer Function //
+function correctAnswer(){
+    resultID.innerHTML="";
+    correctText.textContent = "CORRECT!";
+    resultID.appendChild(correctText);
+    questionInx++;
+
+    displayQuestion();
+
+};
+
+// Incorrect Answer Function //
+function incorrectAnswer(){
+    result.innerHTML="";
+    incorrectText.textContent = "INCORRECT!";
+    resultID.appendChild(incorrectText);
+    counter = (counter-10);  
+    questionInx++;
+
+    displayQuestion();
+    
+};
 //////////////////////////////////////////////////////////
 // SUCCESS PAGE //
 //////////////////////////////////////////////////////////
-function success(){
+function successPage(){
+    counter = 60;
+
     headlineID.innerHTML = "";
     contentID.innerHTML = "";
     buttonsID.innerHTML = "";
     resultID.innerHTML = "";
-    successDisplay.textContent = "YOU WIN!";
-    successDisplay.setAttribute("style", "color:green;")
+    successDisplay.textContent = "RECORD YOUR SCORE!";
+    successDisplay.setAttribute("style", "color:white;")
     contentID.appendChild(successDisplay);
+    body.setAttribute("style", "background-color: green")
     console.log("Made it");
 };
 
@@ -267,16 +255,29 @@ function success(){
 // FAILURE PAGE //
 //////////////////////////////////////////////////////////
 function failure() {
+    counter = 0;
+
+    //Clear All Elements//
     headlineID.innerHTML = "";
     contentID.innerHTML = "";
     buttonsID.innerHTML = "";
     resultID.innerHTML = "";
+
+    //Failure Content//
     failText.textContent = "YOU FAILED!";
     failSubText.textContent = "Sorry, but you ran out of time.";
+    tryAgain.textContent = "Try Again?";
     body.setAttribute("style", "background-color:red;")
     contentID.appendChild(failText);
     contentID.appendChild(failSubText);
-}
+    resultID.appendChild(pTag)
+    pTag.appendChild(tryAgain);
+    pTag.setAttribute("style", "text-align: center");
+
+    resultID.addEventListener("click", function(e){
+        startQuiz()
+    });
+};
     
 
 
