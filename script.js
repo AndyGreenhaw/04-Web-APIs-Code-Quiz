@@ -6,16 +6,14 @@ var h1El = document.createElement("h1");
 var h2El = document.createElement("h2");
 var buttonEl = document.createElement("button");
 var pTag = document.createElement("p");
+var answerButton = document.createElement("button");
 var correctText = document.createElement("h3");
 var incorrectText = document.createElement("h3");
+var orderedList = document.createElement("ol");
+var listItem = document.createElement("li");
 var score = 0;
 var count = 60;
 var questionInx = 0;
-
-// TEXT //
-buttonEl.textContent = "Start Quiz";
-correctText.textContent = "CORRECT!";
-incorrectText.textContent = "INCORRECT!";
 
 // PRIMARY ELEMENT IDS //
 var headlineID = document.getElementById("headline");
@@ -27,78 +25,95 @@ var resultID = document.getElementById("result");
 
 var question1 = {
     headline : "Question 1",
-    question : "How many legs does a dog have?",
+    question : "What year was JavasScript invented?",
     possibleAnswers : [
-        "One", 
-        "Two",
-        "Three",
-        "Four"
+        "1986", 
+        "1995",
+        "1972",
+        "2020",
+        "2001"
     ],
-    correctAnswer : "Four",
+    correctAnswer : "1995"
 };
 
 var question2 = {
     headline : "Question 2",
-    question : "How many legs does a dog have?",
+    question : "What does CSS stand for?",
     possibleAnswers : [
-        "One", 
-        "Two",
-        "Three",
-        "Four"
+        "Cold Syrup Sausages", 
+        "Computer Styling Software",
+        "Cascading Style Sheets",
+        "Collaborative Sornaculation Systems",
+        "Coordinated Snorkeling Smurfs"
     ],
-    correctAnswer : "Four",
+    correctAnswer : "Cascading Style Sheets"
 };
+
 
 var question3 = {
     headline : "Question 3",
-    question : "How many legs does a dog have?",
+    question : "Which of these ways is the correct way to call a function?",
     possibleAnswers : [
-        "One", 
-        "Two",
-        "Three",
-        "Four"
+        "Function()", 
+        "()Function",
+        ".Function",
+        "#Function",
+        "Funk()"
     ],
-    correctAnswer : "Four",
+    correctAnswer : "Function()"
 };
 
 var question4 = {
     headline : "Question 4",
-    question : "How many legs does a dog have?",
+    question : "How do you add 1 to a variable in a loop?",
     possibleAnswers : [
-        "One", 
-        "Two",
-        "Three",
-        "Four"
+        "Variable++", 
+        "Variable+",
+        "Variable+1",
+        "Variable(+1)",
+        "Variable(1)"
     ],
-    correctAnswer : "Four",
+    correctAnswer : "Variable++"
 };
 
 var question5 = {
     headline : "Question 5",
-    question : "How many legs does a dog have?",
+    question : "What does HTML stand for?",
     possibleAnswers : [
-        "One", 
-        "Two",
-        "Three",
-        "Four"
+        "Hyperactive Text Management Language", 
+        "Hypnotic Techno Music Lounge",
+        "Hungry Tigers Mourning Larry",
+        "Hypertext Markup Language",
+        "Hypertext Monkey Language"
     ],
-    correctAnswer : "Four",
+    correctAnswer : "Hypertext Markup Language"
 };
 
 //QUESTION ARRAY 
 
 var questionArray = [question1, question2, question3, question4, question5];
 
+// TIMER FUNCTION //
+
+function startCountdown(){
+    
+}
+
 // RIGHT OR WRONG FUNCTIONS //
 
 function correctAnswer(){
-    body.appendChild(correctText);
-    score = (score + 1);
+    correctText.textContent = "CORRECT!";
+    resultID.appendChild(correctText);
+    questionInx++
+
     };
     
 function incorrectAnswer(){
-    body.appendChild(incorrectText);
+    incorrectText.textContent = "INCORRECT!";
+    resultID.appendChild(incorrectText);
     count = (count-10);  
+    questionInx++
+
     };
 
 ////////////////
@@ -111,6 +126,7 @@ function startQuiz (){
 
     h1El.textContent = "Welcome to my quiz!";
     h2El.textContent = "Push the Start Button to start the quiz, and try to answer the questions within the time limit. Keep in mind, any question you answer wrong will penalize your score time by ten seconds.";
+    buttonEl.textContent = "Start Quiz";
 
     // Append Starter Elements //
     headlineID.appendChild(h1El);
@@ -119,7 +135,7 @@ function startQuiz (){
     contentID.appendChild(pTag);
     pTag.appendChild(buttonEl);
 
-    buttonEl.addEventListener(displayQuestion);
+    buttonEl.addEventListener("click", displayQuestion);
 
 };
 
@@ -147,25 +163,51 @@ function displayQuestion(e){
     
     //Build Loop to Set Up Possible Answers//
     //Loop Through All ANswers and Create BUtton for Each//
-    
+    //answerButton.innerHTML = "";
+    console.log("INX" + questionInx);
+    console.log("H1" +  h1El.textContent);
+    console.log("H2" +  h2El.textContent);
+    pTag.innerHTML="";
+
     for(var i = 0; i < currentQuestion.possibleAnswers.length; i++){
-        
-        var answerButton = document.createElement("button");
+
+        answerButton = document.createElement("button");
         answerButton.textContent = currentQuestion.possibleAnswers[i];
         buttonsID.appendChild(pTag);
         pTag.appendChild(answerButton);
         answerButton.setAttribute("value", currentQuestion.possibleAnswers[i])
 
+        console.log("LOOP" + answerButton.textContent);
+
     };
+
+    console.log("LOOP" + answerButton.textContent);
+
+    buttonsID.addEventListener("click", function(e){
+        e.preventDefault();
+        
+        if( e.target.matches("button") ){
+            var humanAnswer = e.target.getAttribute("value");
+    
+            // compare button value to correct answer
+            if (humanAnswer === currentQuestion.correctAnswer) {
+                correctAnswer();
+                displayQuestion(e);
+                
+            } else if (humanAnswer !== currentQuestion.correctAnswer){
+                incorrectAnswer();
+                displayQuestion(e);
+                
+            };
+
+            console.log(e.target.getAttribute("value"));
+            console.log(humanAnswer);
+        }
+    })
+
 };
 
-buttonsID.addEventListener("click", function(e){
-    e.preventDefault();
-    if( e.target.matches("button") ){
-        console.log(e.target.getAttribute("value"));
-        // compare button value to correct answer
-    }
-})
+
 
     // Loop through answers - Complete
     

@@ -1,6 +1,184 @@
 // Set Body
 var body = document.body;
 
+
+
+//question1.possibleAnswers.forEach(function(choice){
+        //console.log(choice);
+        
+        //Set Up Choice Buttons//
+        var answerButton = document.createElement("button");
+        //body.appendChild(qTag);
+        //Pulls Text from Objects to Buttons
+        answerButton.textContent = currentQuestion.possibleAnswers[i];
+        //Stylizes Buttons
+        answerButton.setAttribute("style", "text-align: center; color:white; background-color:blue; width: 100px;");
+        answerButton.setAttribute("id", "choice" + (i+1));
+        answerButton.setAttribute("class", "buttons");
+        answerButton.setAttribute("value", (i+1));
+        //Place Buttons in P Tags
+        qTag.appendChild(answers1Button);
+
+
+
+var correct = document.getElementById("choice4");
+//var incorrect = ???????//
+// User Chooses Button //
+
+answerButton.onclick = function(e){
+    e.preventDefault();
+    console.log(this.value);
+
+    // If Correct, Add 1 to Score and Move to Question 2 Function //
+    if (this.value == '4') {
+        body.appendChild(correctText);
+        score = (score + 1);
+        console.log(score);
+
+        secondQuestion();
+
+    // If Incorrect, Add 1 to Score and Move to Question 2 Function //
+    } else {
+        body.appendChild(incorrectText);
+        count = (count - 10);
+        console.log(score);
+        
+        };
+    };
+};
+};
+
+
+function secondQuestion(){
+console.log("This is working!");
+
+};
+
+//////////////////////////////////////////////////////////
+//SECOND QUESTION: Activates after clicking Start Button //
+//////////////////////////////////////////////////////////
+// Question 2 //
+var question2 = {
+headline : "Question 2",
+question : "How many legs does a human have?",
+possibleAnswers : [
+    "One",
+    "Two",
+    "Three",
+    "Four"
+],
+correctAnswer : "Four",
+};
+
+function secondQuestion(e){
+e.preventDefault();
+
+
+//Remove Buttons//
+answers1Button.setAttribute("style", "display:none;");
+
+//Add Headline and Question//
+//Add Headline and Question//
+h1El.textContent = question2.headline;
+h2El.textContent = question2.question;
+
+
+
+};
+
+
+// stuff i my use //
+// Correct Function //
+function correctAnswer(){
+body.appendChild(correctText);
+score = (score + 1);
+};
+
+// Incorrect Function //
+function incorrectAnswer(){
+body.appendChild(incorrectText);
+count = (count-10);  
+};
+
+
+
+//if (onclick= ){
+//    body.append(correctText);
+//} else {
+//    body.append(incorrectText);
+//}
+
+//Set Up Possible Answers
+//for (var i =0; i < question1.possibleAnswers.length; i++){
+    
+    //Possible Answers Styled Into Buttons
+    //var qTag = document.createElement("p");
+        //qTag.setAttribute("style", "text-align: center;")
+    //var answers1Button = document.createElement("button");
+        //body.appendChild(qTag);
+        //answers1Button.textContent = question1.possibleAnswers[i];
+        //answers1Button.setAttribute("style", "text-align: center; color:white; background-color:blue; width: 100px;");
+        //qTag.appendChild(answers1Button);
+//}
+
+//answers1Button.addEventListener("click", function(e){
+//e.preventDefault();
+
+//if (e.target.matches)
+
+//})
+
+
+
+
+//if (onclick(question1.possibleAnswers[3])){
+    //var h3El = document.createElement("h3");
+    //h3El.textContent = "CORRECT!"
+    //body.appendChild(h3El);
+
+//} else { 
+    //var h3El = document.createElement("h3");
+    //h3El.textContent = "INCORRECT!"
+    //body.appendChild(h3El);
+//}
+
+
+
+
+//Choice 1//
+//choice1.textContent = question1.possibleAnswers[0];
+//body.appendChild(divTag);
+//body.appendChild(choice1);
+//choice1.setAttribute("style", "color:white; background-color:blue;");
+
+//Choice 2//
+//choice2.textContent = question1.possibleAnswers[1];
+//body.appendChild(divTag);
+//body.appendChild(choice2);
+//choice2.setAttribute("style", "color:white; background-color:blue;");
+
+//Choice 3//
+//choice3.textContent = question1.possibleAnswers[2];
+//body.appendChild(divTag);
+//body.appendChild(choice3);
+//choice3.setAttribute("style", "color:white; background-color:blue;");
+
+//Choice 4//
+//choice4.textContent = question1.possibleAnswers[3];
+//body.appendChild(divTag);
+//body.appendChild(choice4);
+//choice4.setAttribute("style", "color:white; background-color:blue;");
+
+//};
+
+// CREATE AN OBJECT WITH AN ARRAY OF HIGH SCORES
+
+//var allQuestions = [question1, question2, question3, question4, question5]
+
+
+
+
+
 // Create Elements
 var h1El = document.createElement("h1");
 var h2El = document.createElement("h2");

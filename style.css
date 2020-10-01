@@ -11,6 +11,8 @@ div.row > div, header, nav, main {
     padding-bottom: 0px;
     padding-left: 0px;
     padding-right: 0px;
+
+    text-align: center;
 } 
 
 h1 {
@@ -50,6 +52,10 @@ h3 {
 }
 
 p {
+    text-align: center;
+}
+
+#Buttons {
     text-align: center;
 }
 
