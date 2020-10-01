@@ -9,8 +9,10 @@ var pTag = document.createElement("p");
 var answerButton = document.createElement("button");
 var correctText = document.createElement("h3");
 var incorrectText = document.createElement("h3");
-var failText = document.createElement("h1");
-var successDisplay = document.createElement("h1");
+var failText = document.createElement("h4");
+var failSubText = document.createElement("h5");
+var successDisplay = document.createElement("h4");
+var successSubText = document.createElement("h5");
 var timerDisplay = document.createElement("p");
 var score = 0;
 var count = 60;
@@ -100,8 +102,7 @@ var counter = 60;
 
 function startCountdown(seconds){
 
-    const interval = setInterval(() => {
-    
+    setInterval(() => {
     console.log(counter);
     counter--;
 
@@ -121,8 +122,10 @@ function failure() {
     buttonsID.innerHTML = "";
     resultID.innerHTML = "";
     failText.textContent = "YOU FAILED!";
-    failText.setAttribute("style", "color:red;")
+    failSubText.textContent = "Sorry, but you ran out of time.";
+    body.setAttribute("style", "background-color:red;")
     contentID.appendChild(failText);
+    resultID.appendChild(failSubText);
 }
 
 // SUCCESS PAGE //
@@ -145,12 +148,12 @@ function correctAnswer(){
     resultID.appendChild(correctText);
     questionInx++
 
-    if (questionInx > 4){
+    if (questionInx === 4){
         successDisplay();
 
     } else {
         displayQuestion();
-    }
+    };
 
 };
     
@@ -241,11 +244,8 @@ function displayQuestion(e){
             // compare button value to correct answer
             if (humanAnswer === currentQuestion.correctAnswer) {
                 correctAnswer();
-                
-                
             } else if (humanAnswer !== currentQuestion.correctAnswer){
                 incorrectAnswer();
-            
             };
 
             console.log(e.target.getAttribute("value"));
