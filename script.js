@@ -1,7 +1,7 @@
 // SET BODY //
 var body = document.body;
 
-// ELEMENTS //
+// ALL GLOBAL ELEMENTS //
 var h1El = document.createElement("h1");
 var h2El = document.createElement("h2");
 var buttonEl = document.createElement("button");
@@ -99,7 +99,7 @@ var question5 = {
 
 //QUESTION ARRAY 
 
-var questionArray = [question1, question2, question3, question4, question5]
+var questionArray = [question1, question2, question4, question5];
 
 // TIMER FUNCTION //
 
@@ -124,35 +124,35 @@ var questionArray = [question1, question2, question3, question4, question5]
 startQuiz();
 
 function startQuiz (){
-    //Clear Old Content for Try Again//
+    // Clear Old Content in Case This Is User's 'Try Again'//
     headlineID.innerHTML="";
     contentID.innerHTML="";
     buttonsID.innerHTML="";
     resultID.innerHTML="";
     timerID.innerHTML="";
 
+    // Starting Text Content and Button
     h1El.textContent = "Welcome to my quiz!";
     h2El.textContent = "Push the Start Button to start the quiz, and try to answer the questions within the time limit. Keep in mind, any question you answer wrong will penalize your score time by ten seconds.";
     buttonEl.textContent = "Start Quiz";
 
-    // Append Starter Elements //
+    // Append Starting Text Content and Button Into Elements 
     headlineID.appendChild(h1El);
-    console.log(h2El);
     contentID.appendChild(h2El);
     contentID.appendChild(pTag);
     pTag.appendChild(buttonEl);
 
-    // Start Quiz - Go to Question Display //
+    // Click Button to Start First Question
     buttonEl.addEventListener("click", displayQuestion);
 
-    // Start Timer Function //
+    // Start Timer After Clicking Button //
     buttonEl.addEventListener("click", function() {
         
-        // Start Countdown//
+        // Countdown Function //
         startCountdown  = setInterval(() => {
             counter--;
-            console.log("TIMER: " + counter);
-            console.log("TIMER StartCountdown Var: " + startCountdown);
+            //console.log("TIMER: " + counter);
+            // console.log("TIMER StartCountdown Var: " + startCountdown);
         
             if (counter <= 0){
                 counter = 0;
@@ -177,26 +177,25 @@ function displayQuestion(e){
     //Clear Old Content//
     buttonEl.setAttribute("style", "display:none;");
 
-    //Populates Each Question//
-    var currentQuestion = questionArray[questionInx]
-    console.log("INX DISPLAY CODE" + questionInx)
-
     //After User Completes Last Question, Take Them to Success Page//
-    if (questionInx > 4){
-       successPage();
+    if (questionInx >= questionArray.length){
+        successPage();
     } else {
 
-    //Add Headline and Question//
-    h1El.textContent = currentQuestion.headline;
-    h2El.textContent = currentQuestion.question;
-    
-    //Console Logging QIndex, H1, and H2//
-    console.log("INX" + questionInx);
-    console.log("H1" +  h1El.textContent);
-    console.log("H2" +  h2El.textContent);
+        // Cycles Through Question Objects
+        var currentQuestion = questionArray[questionInx]
+        console.log("INX DISPLAY CODE" + questionInx)
+        console.log(currentQuestion)
 
-    //Clear Old Buttons//
-    pTag.innerHTML="";
+        // Populates Headline/Question from each Question Object
+        h1El.textContent = currentQuestion.headline;
+        h2El.textContent = currentQuestion.question;        
+        //console.log("INX" + questionInx);
+        //console.log("H1" +  h1El.textContent);
+        //console.log("H2" +  h2El.textContent);
+
+        //Clear Old Buttons to Make Way for New//
+        pTag.innerHTML="";
 
         //Loop New Buttons on Current Question//
         for(var i = 0; i < currentQuestion.possibleAnswers.length; i++){
@@ -208,8 +207,9 @@ function displayQuestion(e){
             answerButton.setAttribute("value", currentQuestion.possibleAnswers[i]);
             
             //Console Logging the Loop//
-            console.log("LOOP" + answerButton.textContent);
+            // console.log("LOOP" + answerButton.textContent);
         };
+    };
     
     //User Chooses Answer//
     buttonsID.addEventListener("click", function(e){
@@ -220,70 +220,107 @@ function displayQuestion(e){
     
             // If Correct, Log As Correct //
             if (humanAnswer === currentQuestion.correctAnswer) {
+                console.log("CORRECT")
                 correctAnswer();
-            // If Incorrect, Log As Correct //
+            // If Incorrect, Log As Incorrect //
             } else if (humanAnswer !== currentQuestion.correctAnswer){
+                console.log("INCORRECT")
                 incorrectAnswer();
             };
-            console.log(humanAnswer);
-            console.log(currentQuestion);
+            // console.log(humanAnswer);
+            //  console.log(currentQuestion);
             
         };
-        
+    
     });
-    };
+    
 };
 
 //////////////////////////////
 // RIGHT OR WRONG FUNCTIONS //
 //////////////////////////////
 
-// Correct Answer Function //
-function correctAnswer(){
-    console.log("CORRECT ANSWER ")
+// CORRECT ANSWER FUNCTION //
 
+function correctAnswer(){
+    //console.log("CORRECT ANSWER ")
+
+    //Clear Old Content
     resultID.innerHTML="";
+    
+    // Message: Incorrect Below Content - Fades Off.
+    var opacity = 100;
     correctText.textContent = "CORRECT!";
     resultID.appendChild(correctText);
-    questionInx = questionInx + 1;
-    console.log("INX CORRECT FUNC" + questionInx)
+    correctText.setAttribute("style", "opacity:" + opacity)
+    
+    // Clear "Correct" Message After 1 Second
+    setTimeout(function(){
+        correctText.textContent = null;
+    }, 1000);
 
+    //Add 1 to Question Index to Set Up Next Loop
+    questionInx++;
+    //console.log("INX CORRECT FUNC" + questionInx)
+
+    // Activate Next Question
     displayQuestion();
 
 };
 
-// Incorrect Answer Function //
-function incorrectAnswer(){
-    console.log("INCORRECT ANSWER ")
+// INCORRECT ANSWER FUNCTION //
 
+function incorrectAnswer(){
+    //console.log("INCORRECT ANSWER ")
+
+    //CLear Old Content
     result.innerHTML="";
+
+    // Message: Incorrect Below Content - Fades Off
     incorrectText.textContent = "INCORRECT!";
     resultID.appendChild(incorrectText);
-    counter = (counter-10);  
-    questionInx = questionInx + 1;
+    
+    // Clear "Incorrect" Message After 1 Second
+    setTimeout(function(){
+        incorrectText.textContent = null;
+    }, 1000);
+
+    // Subtract 10 Seconds from Score
+    counter = (counter-10);
+
+    // Add 1 to Question Index for Next Loop
+    questionInx++;
     console.log("INX INCORRECT FUNC" + questionInx)
+    
+    // Activate Next Question
     displayQuestion();
     
 };
+
 //////////////////////////////////////////////////////////
 // SUCCESS PAGE //
 //////////////////////////////////////////////////////////
+
 function successPage(){
 
+    // Stops Clock and Records Final Score
     finalScore = counter;
     console.log(finalScore);
     clearTimeout(startCountdown);
 
+    // Clears All Onscreen Content
     headlineID.innerHTML = "";
     contentID.innerHTML = "";
     buttonsID.innerHTML = "";
     resultID.innerHTML = "";
 
-    
+    // Page Design and Message: Tells User to Record Score
     body.setAttribute("style", "background-color: green");
     contentID.appendChild(formEl);
     successDisplay.textContent = "RECORD YOUR SCORE!";
     successDisplay.setAttribute("style", "color:white;");
+
+    // Enter Name
     formEl.appendChild(successDisplay);
     console.log("Made it");
 };
@@ -293,15 +330,16 @@ function successPage(){
 //////////////////////////////////////////////////////////
 function failure() {
     
+    // Stops Clock//
     clearTimeout(startCountdown);
 
-    //Clear All Elements//
+    // Clear All Elements//
     headlineID.innerHTML = "";
     contentID.innerHTML = "";
     buttonsID.innerHTML = "";
     resultID.innerHTML = "";
 
-    //Failure Content//
+    // Page Design and Message: Asks to Try Again
     failText.textContent = "YOU FAILED!";
     failSubText.textContent = "Sorry, but you ran out of time.";
     tryAgain.textContent = "Try Again?";
@@ -312,6 +350,7 @@ function failure() {
     pTag.appendChild(tryAgain);
     pTag.setAttribute("style", "text-align: center");
 
+    // Button: Try Again
     resultID.addEventListener("click", function(e){
         startQuiz()
     });
