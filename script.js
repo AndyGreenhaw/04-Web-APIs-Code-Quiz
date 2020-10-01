@@ -16,6 +16,7 @@ var failText = document.createElement("h4");
 var failSubText = document.createElement("h5");
 var successDisplay = document.createElement("h4");
 var timerDisplay = document.createElement("p");
+var finalScore = 60;
 var count = 60;
 var questionInx = 0;
 
@@ -99,21 +100,20 @@ var question5 = {
 var questionArray = [question1, question2, question3, question4, question5]
 
 // TIMER FUNCTION //
-var counter = 60;
 
-function startCountdown(seconds){
+    //var counter = 60;
+    //var startCountdown;
+       /* var counter = setInterval(function() {
+            console.log(counter);
+            counter--;
+        
+            if (counter <= 0){
+                counter = 0;
+                failure();
+            };
+            }, 1000)
+        */
 
-    setInterval(() => {
-    console.log(counter);
-    counter--;
-
-    if (counter <= 0){
-        counter = 0;
-        failure();
-    };
-    }, 1000);
-
-};
 
 ////////////////
 // QUIZ STARTS //
@@ -140,8 +140,24 @@ function startQuiz (){
     contentID.appendChild(pTag);
     pTag.appendChild(buttonEl);
 
+    // Start Quiz - Go to Question Display //
     buttonEl.addEventListener("click", displayQuestion);
-    buttonEl.addEventListener("click", startCountdown);
+
+    // Start Timer Function //
+    buttonEl.addEventListener("click", function() {
+        
+        // Start Countdown//
+        startCountdown  = setInterval(() => {
+            console.log(counter);
+            counter--;
+        
+            if (counter <= 0){
+                counter = 0;
+                failure();
+            };
+            }, 1000); 
+
+    });
 
 };
 
@@ -202,6 +218,9 @@ function displayQuestion(e){
             } else if (humanAnswer !== currentQuestion.correctAnswer){
                 incorrectAnswer();
             };
+            console.log(humanAnswer);
+            console.log(currentQuestion);
+            
         };
         
     });
@@ -214,10 +233,12 @@ function displayQuestion(e){
 
 // Correct Answer Function //
 function correctAnswer(){
+    console.log("CORRECTANSWER")
+
     resultID.innerHTML="";
     correctText.textContent = "CORRECT!";
     resultID.appendChild(correctText);
-    questionInx++;
+    questionInx = questionInx + 1;
 
     displayQuestion();
 
@@ -225,11 +246,13 @@ function correctAnswer(){
 
 // Incorrect Answer Function //
 function incorrectAnswer(){
+    console.log("INCORRECTANSWER")
+
     result.innerHTML="";
     incorrectText.textContent = "INCORRECT!";
     resultID.appendChild(incorrectText);
     counter = (counter-10);  
-    questionInx++;
+    questionInx = questionInx + 1;
 
     displayQuestion();
     
@@ -238,7 +261,9 @@ function incorrectAnswer(){
 // SUCCESS PAGE //
 //////////////////////////////////////////////////////////
 function successPage(){
-    counter = 60;
+
+    finalScore =
+    clearTimeout(startCountdown);
 
     headlineID.innerHTML = "";
     contentID.innerHTML = "";
@@ -255,7 +280,8 @@ function successPage(){
 // FAILURE PAGE //
 //////////////////////////////////////////////////////////
 function failure() {
-    counter = 0;
+    
+    clearTimeout(startCountdown);
 
     //Clear All Elements//
     headlineID.innerHTML = "";
