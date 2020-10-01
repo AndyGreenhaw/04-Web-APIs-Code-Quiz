@@ -9,8 +9,9 @@ var pTag = document.createElement("p");
 var answerButton = document.createElement("button");
 var correctText = document.createElement("h3");
 var incorrectText = document.createElement("h3");
-var orderedList = document.createElement("ol");
-var listItem = document.createElement("li");
+var failText = document.createElement("h1");
+var successDisplay = document.createElement("h1");
+var timerDisplay = document.createElement("p");
 var score = 0;
 var count = 60;
 var questionInx = 0;
@@ -20,6 +21,7 @@ var headlineID = document.getElementById("headline");
 var contentID = document.getElementById("content");
 var buttonsID = document.getElementById("buttons");
 var resultID = document.getElementById("result");
+var timerID = document.getElementById("timer");
 
 // QUESTION OBJECTS //
 
@@ -94,27 +96,73 @@ var question5 = {
 var questionArray = [question1, question2, question3, question4, question5];
 
 // TIMER FUNCTION //
+var counter = 60;
 
-function startCountdown(){
+function startCountdown(seconds){
+
+    const interval = setInterval(() => {
     
+    console.log(counter);
+    counter--;
+
+    if (counter < 1){
+        counter = 0;
+        failure();
+    };
+
+    }, 1000);
+
+};
+
+// FAILURE PAGE //
+function failure() {
+    headlineID.innerHTML = "";
+    contentID.innerHTML = "";
+    buttonsID.innerHTML = "";
+    resultID.innerHTML = "";
+    failText.textContent = "YOU FAILED!";
+    failText.setAttribute("style", "color:red;")
+    contentID.appendChild(failText);
 }
+
+// SUCCESS PAGE //
+function success(){
+    headlineID.innerHTML = "";
+    contentID.innerHTML = "";
+    buttonsID.innerHTML = "";
+    resultID.innerHTML = "";
+    successDisplay.textContent = "YOU WIN!";
+    successDisplay.setAttribute("style", "color:green;")
+    contentID.appendChild(successDisplay);
+    console.log("Made it");
+};
 
 // RIGHT OR WRONG FUNCTIONS //
 
 function correctAnswer(){
+    resultID.innerHTML="";
     correctText.textContent = "CORRECT!";
     resultID.appendChild(correctText);
     questionInx++
 
-    };
+    if (questionInx > 4){
+        successDisplay();
+
+    } else {
+        displayQuestion();
+    }
+
+};
     
 function incorrectAnswer(){
+    result.innerHTML="";
     incorrectText.textContent = "INCORRECT!";
     resultID.appendChild(incorrectText);
-    count = (count-10);  
+    counter = (counter-10);  
     questionInx++
 
-    };
+    displayQuestion();
+};
 
 ////////////////
 // QUIZ STARTS //
@@ -136,6 +184,7 @@ function startQuiz (){
     pTag.appendChild(buttonEl);
 
     buttonEl.addEventListener("click", displayQuestion);
+    buttonEl.addEventListener("click", startCountdown);
 
 };
 
@@ -150,7 +199,7 @@ function startQuiz (){
 //////////////////////////////////////////////////////////
 
 function displayQuestion(e){
-    e.preventDefault();
+    //e.preventDefault();
 
     var currentQuestion = questionArray[questionInx]
 
@@ -184,7 +233,7 @@ function displayQuestion(e){
     console.log("LOOP" + answerButton.textContent);
 
     buttonsID.addEventListener("click", function(e){
-        e.preventDefault();
+        //e.preventDefault();
         
         if( e.target.matches("button") ){
             var humanAnswer = e.target.getAttribute("value");
@@ -192,22 +241,18 @@ function displayQuestion(e){
             // compare button value to correct answer
             if (humanAnswer === currentQuestion.correctAnswer) {
                 correctAnswer();
-                displayQuestion(e);
+                
                 
             } else if (humanAnswer !== currentQuestion.correctAnswer){
                 incorrectAnswer();
-                displayQuestion(e);
-                
+            
             };
 
             console.log(e.target.getAttribute("value"));
             console.log(humanAnswer);
         }
     })
-
 };
-
-
 
     // Loop through answers - Complete
     
