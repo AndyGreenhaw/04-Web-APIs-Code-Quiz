@@ -12,9 +12,7 @@ var incorrectText = document.createElement("h3");
 var failText = document.createElement("h4");
 var failSubText = document.createElement("h5");
 var successDisplay = document.createElement("h4");
-var successSubText = document.createElement("h5");
 var timerDisplay = document.createElement("p");
-var score = 0;
 var count = 60;
 var questionInx = 0;
 
@@ -93,9 +91,22 @@ var question5 = {
     correctAnswer : "Hypertext Markup Language"
 };
 
+var final = {
+    headline : "Question 5",
+    question : "What does HTML stand for?",
+    possibleAnswers : [
+        "Hyperactive Text Management Language", 
+        "Hypnotic Techno Music Lounge",
+        "Hungry Tigers Mourning Larry",
+        "Hypertext Markup Language",
+        "Hypertext Monkey Language"
+    ],
+    correctAnswer : "Hypertext Markup Language"
+};
+
 //QUESTION ARRAY 
 
-var questionArray = [question1, question2, question3, question4, question5];
+var questionArray = [question1, question2, question3, question4, question5], final;
 
 // TIMER FUNCTION //
 var counter = 60;
@@ -115,48 +126,22 @@ function startCountdown(seconds){
 
 };
 
-// FAILURE PAGE //
-function failure() {
-    headlineID.innerHTML = "";
-    contentID.innerHTML = "";
-    buttonsID.innerHTML = "";
-    resultID.innerHTML = "";
-    failText.textContent = "YOU FAILED!";
-    failSubText.textContent = "Sorry, but you ran out of time.";
-    body.setAttribute("style", "background-color:red;")
-    contentID.appendChild(failText);
-    resultID.appendChild(failSubText);
-}
-
-// SUCCESS PAGE //
-function success(){
-    headlineID.innerHTML = "";
-    contentID.innerHTML = "";
-    buttonsID.innerHTML = "";
-    resultID.innerHTML = "";
-    successDisplay.textContent = "YOU WIN!";
-    successDisplay.setAttribute("style", "color:green;")
-    contentID.appendChild(successDisplay);
-    console.log("Made it");
-};
-
+//////////////////////////////
 // RIGHT OR WRONG FUNCTIONS //
+//////////////////////////////
 
+// Correct Answer Function //
 function correctAnswer(){
     resultID.innerHTML="";
     correctText.textContent = "CORRECT!";
     resultID.appendChild(correctText);
     questionInx++
 
-    if (questionInx === 4){
-        successDisplay();
-
-    } else {
-        displayQuestion();
-    };
+    displayQuestion();
 
 };
-    
+
+// Correct Answer Function //
 function incorrectAnswer(){
     result.innerHTML="";
     incorrectText.textContent = "INCORRECT!";
@@ -165,6 +150,7 @@ function incorrectAnswer(){
     questionInx++
 
     displayQuestion();
+    
 };
 
 ////////////////
@@ -204,67 +190,93 @@ function startQuiz (){
 function displayQuestion(e){
     //e.preventDefault();
 
+    //Hides Original Start Button//
+    buttonEl.setAttribute("style", "display:none;");
+
+    //Populates Each Question//
     var currentQuestion = questionArray[questionInx]
 
-    //Remove Start Button//
-    buttonEl.setAttribute("style", "display:none;");
+    //After User Completes Last Question, Take Them to Success Page//
+    if (questionInx > 4){
+       success();
+    } else {
 
     //Add Headline and Question//
     h1El.textContent = currentQuestion.headline;
     h2El.textContent = currentQuestion.question;
     
-    //Build Loop to Set Up Possible Answers//
-    //Loop Through All ANswers and Create BUtton for Each//
-    //answerButton.innerHTML = "";
+    //Console Logging QIndex, H1, and H2//
     console.log("INX" + questionInx);
     console.log("H1" +  h1El.textContent);
     console.log("H2" +  h2El.textContent);
+
+    //Clear Old Buttons//
     pTag.innerHTML="";
 
-    for(var i = 0; i < currentQuestion.possibleAnswers.length; i++){
+        //Loop New Buttons on Current Question//
+        for(var i = 0; i < currentQuestion.possibleAnswers.length; i++){
 
-        answerButton = document.createElement("button");
-        answerButton.textContent = currentQuestion.possibleAnswers[i];
-        buttonsID.appendChild(pTag);
-        pTag.appendChild(answerButton);
-        answerButton.setAttribute("value", currentQuestion.possibleAnswers[i])
+            answerButton = document.createElement("button");
+            answerButton.textContent = currentQuestion.possibleAnswers[i];
+            buttonsID.appendChild(pTag);
+            pTag.appendChild(answerButton);
+            answerButton.setAttribute("value", currentQuestion.possibleAnswers[i])
 
-        console.log("LOOP" + answerButton.textContent);
+            console.log("LOOP" + answerButton.textContent);
 
-    };
+        };
 
+    //Console Logging the Loop//
     console.log("LOOP" + answerButton.textContent);
-
+    
+    //User Chooses Answer//
     buttonsID.addEventListener("click", function(e){
-        //e.preventDefault();
+    //e.preventDefault();
         
         if( e.target.matches("button") ){
             var humanAnswer = e.target.getAttribute("value");
     
-            // compare button value to correct answer
+            // If Correct, Log As Correct //
             if (humanAnswer === currentQuestion.correctAnswer) {
                 correctAnswer();
+            // If Incorrect, Log As Correct //
             } else if (humanAnswer !== currentQuestion.correctAnswer){
                 incorrectAnswer();
             };
-
-            console.log(e.target.getAttribute("value"));
-            console.log(humanAnswer);
         }
+        
     })
+    }
 };
 
-    // Loop through answers - Complete
-    
-    
-    // event listener that covers all the buttons
-    // is the button clicked correct or not
-    // if correct - correct answer function
-        // Incremenent Index Value
-        // Call Display QUestion
-    // if incorrect - incorrect function 
-        // Incremenent Index Value
-        // Call Display QUestion
+//////////////////////////////////////////////////////////
+// SUCCESS PAGE //
+//////////////////////////////////////////////////////////
+function success(){
+    headlineID.innerHTML = "";
+    contentID.innerHTML = "";
+    buttonsID.innerHTML = "";
+    resultID.innerHTML = "";
+    successDisplay.textContent = "YOU WIN!";
+    successDisplay.setAttribute("style", "color:green;")
+    contentID.appendChild(successDisplay);
+    console.log("Made it");
+};
+
+//////////////////////////////////////////////////////////
+// FAILURE PAGE //
+//////////////////////////////////////////////////////////
+function failure() {
+    headlineID.innerHTML = "";
+    contentID.innerHTML = "";
+    buttonsID.innerHTML = "";
+    resultID.innerHTML = "";
+    failText.textContent = "YOU FAILED!";
+    failSubText.textContent = "Sorry, but you ran out of time.";
+    body.setAttribute("style", "background-color:red;")
+    contentID.appendChild(failText);
+    contentID.appendChild(failSubText);
+}
     
 
 
