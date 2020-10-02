@@ -1,33 +1,45 @@
-// SET BODY //
-var body = document.body;
+//////////////////////////
+// ALL GLOBAL VARIABLES //
+//////////////////////////
 
-// ALL GLOBAL ELEMENTS //
-var h1El = document.createElement("h1");
-var h2El = document.createElement("h2");
-var buttonEl = document.createElement("button");
-var pTag = document.createElement("p");
-var olEl = document.createElement("ol");
-var liEl = document.createElement("li");
-var formEl = document.createElement("form");
-var answerButton = document.createElement("button");
-var tryAgain = document.createElement("button")
-var correctText = document.createElement("h3");
-var incorrectText = document.createElement("h3");
-var failText = document.createElement("h4");
-var failSubText = document.createElement("h5");
-var successDisplay = document.createElement("h4");
-var timerDisplay = document.createElement("p");
-var score = 60;
-var counter = 60;
-var questionInx = 0;
+// GENERAL ELEMENTS //
+var body = document.body; //............................BODY
+var buttonEl = document.createElement("button"); // ....START BUTTON
+var h1El = document.createElement("h1"); //.............HEADLINES
+var h2El = document.createElement("h2"); //.............QUESTIONS/CONTENT
+var pTag = document.createElement("p"); //..............P TAG
 
+// QUESTION/ANSWER ELEMENTS
+var currentQuestion; //.................................CURRENT QUESTION
+var answerButton = document.createElement("button"); // POSSIBLE ANSWER BUTTONS
+var humanAnswer; //.....................................HUMAN ANSWER
+var correctText = document.createElement("h3"); //......CORRECT ANSWER 
+var incorrectText = document.createElement("h3"); //....INCORRECT ANSWERS
+var questionInx = 0; //.................................QUESTION INDEX NUMBER
+
+// TIME/SCORE ELEMENTS
+var timer; //...........................................TIMER FUNCTION VAR
+var timerDisplay = document.createElement("p"); //......TIMER DISPLAY
+var counter = 60; //....................................TIMER COUNT
+var score = 60; //......................................SCORE
+
+// FORM ELEMENTS
+var formEl = document.createElement("form"); //.........FORM ELEMENT
+
+// COMPLETION CONTENT
+var successDisplay = document.createElement("h4"); //...COMPLETION HEADLINE
+
+// FAILURE CONTENT
+var failText = document.createElement("h4"); //.........FAILURE HEADLINE
+var failSubText = document.createElement("h5"); //......FAILURE SUBTEXT
+var tryAgain = document.createElement("button") //......TRY AGAIN BUTTON
 
 // PRIMARY ELEMENT IDS //
-var headlineID = document.getElementById("headline");
-var contentID = document.getElementById("content");
-var buttonsID = document.getElementById("buttons");
-var resultID = document.getElementById("result");
-var timerID = document.getElementById("timer");
+var headlineID = document.getElementById("headline"); //HEADLINE ID
+var contentID = document.getElementById("content"); //..CONTENT ID
+var buttonsID = document.getElementById("buttons"); //..BUTTONS ID
+var resultID = document.getElementById("result"); //....RESULT ID
+var timerID = document.getElementById("timer"); //......TIMER ID
 
 // QUESTION OBJECTS //
 
@@ -99,31 +111,14 @@ var question5 = {
 
 //QUESTION ARRAY 
 
-var questionArray = [question1, question2, question4, question5];
+var questionArray = [question1, question2, question3, question4, question5];
 
-// TIMER FUNCTION //
-
-    //var counter = 60;
-    //var startCountdown;
-       /* var counter = setInterval(function() {
-            console.log(counter);
-            counter--;
-        
-            if (counter <= 0){
-                counter = 0;
-                failure();
-            };
-            }, 1000)
-        */
-
-
-////////////////
+/////////////////
 // QUIZ STARTS //
-////////////////
+/////////////////
 
-startQuiz();
 
-function startQuiz (){
+
     // Clear Old Content in Case This Is User's 'Try Again'//
     headlineID.innerHTML="";
     contentID.innerHTML="";
@@ -147,25 +142,26 @@ function startQuiz (){
 
     // Start Timer After Clicking Button //
     buttonEl.addEventListener("click", function() {
-        
-        // Countdown Function //
-        startCountdown  = setInterval(() => {
-            counter--;
-            //console.log("TIMER: " + counter);
-            // console.log("TIMER StartCountdown Var: " + startCountdown);
-        
-            if (counter <= 0){
-                counter = 0;
+
+////////////////////
+// TIMER FUNCTION //
+////////////////////
+
+        // TIMER FUNCTION
+        timer = setInterval(function(){
+            // STARTS COUNTER AT 60 SECONDS AND DROPS ONE EVERY 1000MS
+            counter = 60
+            counter--
+            // IF COUNTER REACHES 0, CLEAR IT AND GO TO FAIL FUNCTION
+            if (counter <= 0) {
+                clearInterval(timer)
                 failure();
-            };
-            }, 1000); 
+            }
+        }, 1000) // 1-SECOND INTERVALS
 
-        score = counter;
-        console.log("SCORE: " + score)
-
+        console.log("TIME SCORE STARTS: " + score)
     });
 
-};
 
 //////////////////////////////////////////////////////////
 // QUESTIONS DISPLAY 
@@ -183,21 +179,20 @@ function displayQuestion(e){
     } else {
 
         // Cycles Through Question Objects
-        var currentQuestion = questionArray[questionInx]
-        console.log("INX DISPLAY CODE" + questionInx)
-        console.log(currentQuestion)
-
+        currentQuestion = questionArray[questionInx]
+        console.log("FIREEEEEEEEEEEEEEEEE: " + (questionInx+1))
+        
         // Populates Headline/Question from each Question Object
         h1El.textContent = currentQuestion.headline;
         h2El.textContent = currentQuestion.question;        
-        //console.log("INX" + questionInx);
-        //console.log("H1" +  h1El.textContent);
-        //console.log("H2" +  h2El.textContent);
 
-        //Clear Old Buttons to Make Way for New//
+        // Log Each Question # and Text
+        console.log("QUESTION#: " + (questionInx+1))
+
+        // Clear Old Buttons to Make Way for New//
         pTag.innerHTML="";
 
-        //Loop New Buttons on Current Question//
+        // Loop New Buttons on Current Question//
         for(var i = 0; i < currentQuestion.possibleAnswers.length; i++){
 
             answerButton = document.createElement("button");
@@ -207,34 +202,40 @@ function displayQuestion(e){
             answerButton.setAttribute("value", currentQuestion.possibleAnswers[i]);
             
             //Console Logging the Loop//
-            // console.log("LOOP" + answerButton.textContent);
+            //console.log("QUESTION" + (questionInx+1) + ": " + h2El.textContent);
+            //console.log("OPTION" + (i+1) + ": " + answerButton.textContent);
         };
     };
-    
-    //User Chooses Answer//
-    buttonsID.addEventListener("click", function(e){
-    //e.preventDefault();
-        
-        if( e.target.matches("button") ){
-            var humanAnswer = e.target.getAttribute("value");
-    
-            // If Correct, Log As Correct //
-            if (humanAnswer === currentQuestion.correctAnswer) {
-                console.log("CORRECT")
-                correctAnswer();
-            // If Incorrect, Log As Incorrect //
-            } else if (humanAnswer !== currentQuestion.correctAnswer){
-                console.log("INCORRECT")
-                incorrectAnswer();
-            };
-            // console.log(humanAnswer);
-            //  console.log(currentQuestion);
-            
-        };
-    
-    });
-    
+
 };
+    
+//User Chooses Answer//
+buttonsID.addEventListener("click", function(e){
+//e.preventDefault();
+    
+    if( e.target.matches("button") ){
+        humanAnswer = e.target.getAttribute("value");
+        console.log("Human Answer :" + humanAnswer)
+        console.log("Correct Answer :" + currentQuestion.correctAnswer)
+        // If Correct, Log As Correct //
+        if (humanAnswer === currentQuestion.correctAnswer) {
+            console.log("CORRECT")
+            correctAnswer();
+            
+        // If Incorrect, Log As Incorrect //
+        } else if (humanAnswer !== currentQuestion.correctAnswer){
+            console.log("INCORRECT")
+            incorrectAnswer();
+        };
+        
+        // console.log(humanAnswer);
+        //  console.log(currentQuestion);
+        
+    };
+
+});
+    
+
 
 //////////////////////////////
 // RIGHT OR WRONG FUNCTIONS //
@@ -290,7 +291,7 @@ function incorrectAnswer(){
 
     // Add 1 to Question Index for Next Loop
     questionInx++;
-    console.log("INX INCORRECT FUNC" + questionInx)
+    //console.log("INX INCORRECT FUNC" + questionInx)
     
     // Activate Next Question
     displayQuestion();
@@ -305,8 +306,8 @@ function successPage(){
 
     // Stops Clock and Records Final Score
     finalScore = counter;
-    console.log(finalScore);
-    clearTimeout(startCountdown);
+    console.log("Final Score: " + finalScore);
+    clearTimeout(timer);
 
     // Clears All Onscreen Content
     headlineID.innerHTML = "";
@@ -331,7 +332,7 @@ function successPage(){
 function failure() {
     
     // Stops Clock//
-    clearTimeout(startCountdown);
+    clearTimeout(timer);
 
     // Clear All Elements//
     headlineID.innerHTML = "";
