@@ -26,9 +26,11 @@ var scoreDisplay //.....................................DISPLAYED SCORE
 
 // FORM ELEMENTS
 var formEl = document.createElement("form"); //.........FORM ELEMENT
+var inputEl = document.createElement("input"); //.........FORM ELEMENT
 
 // COMPLETION CONTENT
 var successDisplay = document.createElement("h4"); //...COMPLETION HEADLINE
+var successSubtext = document.createElement("h5")
 
 // FAILURE CONTENT
 var failText = document.createElement("h4"); //.........FAILURE HEADLINE
@@ -53,7 +55,6 @@ var question1 = {
         "1986", 
         "1995",
         "1972",
-        "2020",
         "2001"
     ],
     correctAnswer : "1995"
@@ -66,7 +67,6 @@ var question2 = {
         "Cold Syrup Sausages", 
         "Computer Styling Software",
         "Cascading Style Sheets",
-        "Collaborative Sornaculation Systems",
         "Coordinated Snorkeling Smurfs"
     ],
     correctAnswer : "Cascading Style Sheets"
@@ -79,7 +79,6 @@ var question3 = {
     possibleAnswers : [
         "Function()", 
         "()Function",
-        ".Function",
         "#Function",
         "Funk()"
     ],
@@ -94,7 +93,6 @@ var question4 = {
         "Variable+",
         "Variable+1",
         "Variable(+1)",
-        "Variable(1)"
     ],
     correctAnswer : "Variable++"
 };
@@ -103,7 +101,6 @@ var question5 = {
     headline : "Question 5",
     question : "What does HTML stand for?",
     possibleAnswers : [
-        "Hyperactive Text Management Language", 
         "Hypnotic Techno Music Lounge",
         "Hungry Tigers Mourning Larry",
         "Hypertext Markup Language",
@@ -121,6 +118,7 @@ var questionArray = [question1, question2, question3, question4, question5];
 /////////////////
 // QUIZ STARTS //
 /////////////////
+
 displayScore()
 
 // Clear Old Content in Case This Is User's 'Try Again'//
@@ -131,7 +129,7 @@ resultID.innerHTML="";
 
 // Starting Text Content and Button
 h1El.textContent = "The Hardest Quiz on Earth";
-h2El.textContent = "Push the Start Button to start the quiz, and try to answer the questions within the time limit. Keep in mind, any question you answer wrong will penalize your score time by ten seconds.";
+h2El.textContent = "Click 'Start Quiz' and try to answer the questions within the time limit. Any question you answer wrong will penalize you by 5 seconds.";
 buttonEl.textContent = "Start Quiz";
 
 // Load Starting Text and Button Into Elements 
@@ -158,17 +156,27 @@ function startTimer() {
         displayScore()
         
         if (counter <= 0) {
-            clearInterval(timer);
+            clearInterval(interval);
+            timerID.innerHTML="";
             failure();
 
     }}, 1000)
     
 };
 
+// TIMER DISPLAY
+
 function displayScore(){
     timerEl.textContent = counter;
+    timerEl.setAttribute("style", "color:blue;")
     console.log(score);
     timerID.appendChild(timerEl);
+    if (counter <= 0) {
+        timerID.innerHTML="";
+        failure();
+    } else if (counter < 11){
+        timerEl.setAttribute("style", "color:red;")
+    } 
     //timerEl.appendChild(counter);
 };
 
@@ -186,6 +194,9 @@ function displayQuestion(){
     //After User Completes Last Question, Take Them to Success Page//
     if (questionInx >= questionArray.length){
         successPage();
+    } else if (counter <= 0){
+        failure();
+        buttonsID.innerHTML="";
     } else {
 
         // Cycles Through Question Objects
@@ -237,8 +248,6 @@ buttonsID.addEventListener("click", function(e){
     };
 
 });
-    
-
 
 //////////////////////////////
 // RIGHT OR WRONG FUNCTIONS //
@@ -290,7 +299,7 @@ function incorrectAnswer(){
     }, 1000);
 
     // Subtract 10 Seconds from Score
-    counter = (counter-10);
+    counter = (counter-5);
 
     // Add 1 to Question Index for Next Loop
     questionInx++;
@@ -307,10 +316,13 @@ function incorrectAnswer(){
 
 function successPage(){
 
+    // Stops Clock//
+    clearTimeout(interval);
+
     // Stops Clock and Records Final Score
     finalScore = counter;
     console.log("Final Score: " + finalScore);
-    clearTimeout(timer);
+    clearTimeout(interval);
 
     // Clears All Onscreen Content
     headlineID.innerHTML = "";
@@ -320,13 +332,38 @@ function successPage(){
 
     // Page Design and Message: Tells User to Record Score
     body.setAttribute("style", "background-color: green");
-    contentID.appendChild(formEl);
     successDisplay.textContent = "RECORD YOUR SCORE!";
     successDisplay.setAttribute("style", "color:white;");
+    successSubtext.textContent = "Fill in Your Name!";
+    successSubtext.setAttribute("style", "color:white;");
+    timerEl.setAttribute("style", "color:white;")
+    
 
     // Enter Name
-    formEl.appendChild(successDisplay);
+    headlineID.appendChild(successDisplay);
+    contentID.appendChild(successSubtext);
+    resultID.appendChild(formEl);
+    formEl.appendChild(inputEl);
+    inputEl.setAttribute("placeholder", "Patrick Mahomes");
+    inputEl.setAttribute("style", "width:200; height:100");
     console.log("Made it");
+/*
+    <form class="form">
+                    <div class="form-group">
+                        <h4><label for="formGroupExampleInput">Name</label></h4>
+                        <input type="text" class="form-control" id="formGroupExampleInput" placeholder="George Washington">
+                    </div>
+                    <div class="form-group">
+                        <h4><label for="formGroupExampleInput2">Email</label></h4>
+                        <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="gwash@gmail.com">
+                    </div>
+                    <div class="form-group">
+                        <h4><label for="formGroupExampleInput2">How Can I Help?</label></h4>
+                        <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Message">
+                    </div>
+                </form>
+*/
+
 };
 
 //////////////////////////////////////////////////////////
@@ -335,7 +372,7 @@ function successPage(){
 function failure() {
     
     // Stops Clock//
-    clearTimeout(timer);
+    clearTimeout(interval);
 
     // Stops Questions
     answerButton.setAttribute("style", "display:none");
@@ -345,6 +382,7 @@ function failure() {
     contentID.innerHTML = "";
     buttonsID.innerHTML = "";
     resultID.innerHTML = "";
+    timerID.innerHTML = "";
 
     // Page Design and Message: Asks to Try Again
     failText.textContent = "YOU FAILED!";
@@ -354,12 +392,12 @@ function failure() {
     contentID.appendChild(failText);
     contentID.appendChild(failSubText);
     resultID.appendChild(pTag)
-    pTag.appendChild(tryAgain);
+    buttonsID.appendChild(tryAgain);
     pTag.setAttribute("style", "text-align: center");
 
     // Button: Try Again
     resultID.addEventListener("click", function(e){
-        startQuiz()
+        reset()
     });
 };
 
