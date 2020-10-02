@@ -14,6 +14,7 @@ div.row > div, header, nav, main {
     text-align: center;
 } 
 
+
 h1 {
     font-family: arial;
     font-size: 48px;
@@ -32,15 +33,17 @@ h2 {
     text-align: center;
 }
 
+/* BUTTON DESIGN */
 button {
     margin-top: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
     color: white;
     background-color: blue;
     width: 100px;
     text-align: center;
 }
 
+/* CORRECT / INCORRECT DISPLAY */
 h3 {
     font-family: arial;
     font-size: 32px;
@@ -75,6 +78,8 @@ p {
 #timer {
     text-align: center;
     font-family: 'Black Ops One';
+    font-size: 80px;
+    margin-top: -60px;
     text-transform: uppercase; 
 }
 

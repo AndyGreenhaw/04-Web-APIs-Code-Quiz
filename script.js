@@ -121,6 +121,7 @@ var questionArray = [question1, question2, question3, question4, question5];
 /////////////////
 // QUIZ STARTS //
 /////////////////
+displayScore()
 
 // Clear Old Content in Case This Is User's 'Try Again'//
 headlineID.innerHTML="";
@@ -129,7 +130,7 @@ buttonsID.innerHTML="";
 resultID.innerHTML="";
 
 // Starting Text Content and Button
-h1El.textContent = "Welcome to my quiz!";
+h1El.textContent = "The Hardest Quiz on Earth";
 h2El.textContent = "Push the Start Button to start the quiz, and try to answer the questions within the time limit. Keep in mind, any question you answer wrong will penalize your score time by ten seconds.";
 buttonEl.textContent = "Start Quiz";
 
@@ -150,7 +151,7 @@ buttonEl.addEventListener("click", startTimer);
 ////////////////////
 
 function startTimer() {
-
+    counter = 30
     interval = setInterval(function() {
         counter--;
 
@@ -208,9 +209,6 @@ function displayQuestion(){
             buttonsID.appendChild(pTag);
             pTag.appendChild(answerButton);
             answerButton.setAttribute("value", currentQuestion.possibleAnswers[i]);
-            //Console Logging the Loop//
-            //console.log("QUESTION" + (questionInx+1) + ": " + h2El.textContent);
-            //console.log("OPTION" + (i+1) + ": " + answerButton.textContent);
         };
     };
 
@@ -226,12 +224,10 @@ buttonsID.addEventListener("click", function(e){
         console.log("Correct Answer :" + currentQuestion.correctAnswer)
         // If Correct, Log As Correct //
         if (humanAnswer === currentQuestion.correctAnswer) {
-            console.log("CORRECT")
             correctAnswer();
             
         // If Incorrect, Log As Incorrect //
         } else if (humanAnswer !== currentQuestion.correctAnswer){
-            console.log("INCORRECT")
             incorrectAnswer();
         };
         
