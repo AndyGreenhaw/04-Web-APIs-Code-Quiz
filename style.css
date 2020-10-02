@@ -72,6 +72,12 @@ p {
     text-align: center;
 }
 
+#timer {
+    text-align: center;
+    font-family: 'Black Ops One';
+    text-transform: uppercase; 
+}
+
 #Buttons {
     text-align: center;
 }

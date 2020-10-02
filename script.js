@@ -2,12 +2,12 @@
 // ALL GLOBAL VARIABLES //
 //////////////////////////
 
-// GENERAL ELEMENTS //
-var body = document.body; //............................BODY
+// OPENING ELEMENTS //
 var buttonEl = document.createElement("button"); // ....START BUTTON
 var h1El = document.createElement("h1"); //.............HEADLINES
 var h2El = document.createElement("h2"); //.............QUESTIONS/CONTENT
-var pTag = document.createElement("p"); //..............P TAG
+var body = document.body; //............................<BODY>
+var pTag = document.createElement("p"); //..............<P> TAG
 
 // QUESTION/ANSWER ELEMENTS
 var currentQuestion; //.................................CURRENT QUESTION
@@ -18,10 +18,11 @@ var incorrectText = document.createElement("h3"); //....INCORRECT ANSWERS
 var questionInx = 0; //.................................QUESTION INDEX NUMBER
 
 // TIME/SCORE ELEMENTS
-var timer; //...........................................TIMER FUNCTION VAR
-var timerDisplay = document.createElement("p"); //......TIMER DISPLAY
-var counter = 60; //....................................TIMER COUNT
-var score = 60; //......................................SCORE
+var startTimer; //......................................TIMER FUNCTION HOLDER
+var timerEl = document.createElement("p"); //...........TIMER ELEMENT
+var counter = 30; //....................................TIMER COUNT
+var score = 30; //......................................DISPLAYED SCORE
+var scoreDisplay //.....................................DISPLAYED SCORE
 
 // FORM ELEMENTS
 var formEl = document.createElement("form"); //.........FORM ELEMENT
@@ -41,7 +42,9 @@ var buttonsID = document.getElementById("buttons"); //..BUTTONS ID
 var resultID = document.getElementById("result"); //....RESULT ID
 var timerID = document.getElementById("timer"); //......TIMER ID
 
+//////////////////////
 // QUESTION OBJECTS //
+//////////////////////
 
 var question1 = {
     headline : "Question 1",
@@ -109,7 +112,9 @@ var question5 = {
     correctAnswer : "Hypertext Markup Language"
 };
 
+////////////////
 //QUESTION ARRAY 
+////////////////
 
 var questionArray = [question1, question2, question3, question4, question5];
 
@@ -117,57 +122,61 @@ var questionArray = [question1, question2, question3, question4, question5];
 // QUIZ STARTS //
 /////////////////
 
+// Clear Old Content in Case This Is User's 'Try Again'//
+headlineID.innerHTML="";
+contentID.innerHTML="";
+buttonsID.innerHTML="";
+resultID.innerHTML="";
 
+// Starting Text Content and Button
+h1El.textContent = "Welcome to my quiz!";
+h2El.textContent = "Push the Start Button to start the quiz, and try to answer the questions within the time limit. Keep in mind, any question you answer wrong will penalize your score time by ten seconds.";
+buttonEl.textContent = "Start Quiz";
 
-    // Clear Old Content in Case This Is User's 'Try Again'//
-    headlineID.innerHTML="";
-    contentID.innerHTML="";
-    buttonsID.innerHTML="";
-    resultID.innerHTML="";
-    timerID.innerHTML="";
+// Load Starting Text and Button Into Elements 
+headlineID.appendChild(h1El);
+contentID.appendChild(h2El);
+contentID.appendChild(pTag);
+pTag.appendChild(buttonEl);
 
-    // Starting Text Content and Button
-    h1El.textContent = "Welcome to my quiz!";
-    h2El.textContent = "Push the Start Button to start the quiz, and try to answer the questions within the time limit. Keep in mind, any question you answer wrong will penalize your score time by ten seconds.";
-    buttonEl.textContent = "Start Quiz";
+// Click Start Button to Start First Question
+buttonEl.addEventListener("click", displayQuestion);
 
-    // Append Starting Text Content and Button Into Elements 
-    headlineID.appendChild(h1El);
-    contentID.appendChild(h2El);
-    contentID.appendChild(pTag);
-    pTag.appendChild(buttonEl);
-
-    // Click Button to Start First Question
-    buttonEl.addEventListener("click", displayQuestion);
-
-    // Start Timer After Clicking Button //
-    buttonEl.addEventListener("click", function() {
+// Timer Starts After Clicking Start Button //
+buttonEl.addEventListener("click", startTimer);
 
 ////////////////////
 // TIMER FUNCTION //
 ////////////////////
 
-        // TIMER FUNCTION
-        timer = setInterval(function(){
-            // STARTS COUNTER AT 60 SECONDS AND DROPS ONE EVERY 1000MS
-            counter = 60
-            counter--
-            // IF COUNTER REACHES 0, CLEAR IT AND GO TO FAIL FUNCTION
-            if (counter <= 0) {
-                clearInterval(timer)
-                failure();
-            }
-        }, 1000) // 1-SECOND INTERVALS
+function startTimer() {
 
-        console.log("TIME SCORE STARTS: " + score)
-    });
+    interval = setInterval(function() {
+        counter--;
+
+        displayScore()
+        
+        if (counter <= 0) {
+            clearInterval(timer);
+            failure();
+
+    }}, 1000)
+    
+};
+
+function displayScore(){
+    timerEl.textContent = counter;
+    console.log(score);
+    timerID.appendChild(timerEl);
+    //timerEl.appendChild(counter);
+};
 
 
 //////////////////////////////////////////////////////////
 // QUESTIONS DISPLAY 
 //////////////////////////////////////////////////////////
 
-function displayQuestion(e){
+function displayQuestion(){
     //e.preventDefault();
 
     //Clear Old Content//
@@ -180,7 +189,6 @@ function displayQuestion(e){
 
         // Cycles Through Question Objects
         currentQuestion = questionArray[questionInx]
-        console.log("FIREEEEEEEEEEEEEEEEE: " + (questionInx+1))
         
         // Populates Headline/Question from each Question Object
         h1El.textContent = currentQuestion.headline;
@@ -200,7 +208,6 @@ function displayQuestion(e){
             buttonsID.appendChild(pTag);
             pTag.appendChild(answerButton);
             answerButton.setAttribute("value", currentQuestion.possibleAnswers[i]);
-            
             //Console Logging the Loop//
             //console.log("QUESTION" + (questionInx+1) + ": " + h2El.textContent);
             //console.log("OPTION" + (i+1) + ": " + answerButton.textContent);
@@ -334,6 +341,9 @@ function failure() {
     // Stops Clock//
     clearTimeout(timer);
 
+    // Stops Questions
+    answerButton.setAttribute("style", "display:none");
+
     // Clear All Elements//
     headlineID.innerHTML = "";
     contentID.innerHTML = "";
@@ -356,7 +366,9 @@ function failure() {
         startQuiz()
     });
 };
-    
+
+
+
 
 
 
