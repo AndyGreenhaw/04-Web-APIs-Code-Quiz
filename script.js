@@ -211,7 +211,8 @@ function displayScore(){
 function displayQuestion(){
 
     pTagStart.innerHTML=""
-    
+    body.setAttribute("style", "background-color: white;")
+
     //After User Completes Last Question, Activate Success Function//
     if (questionInx >= questionArray.length){
         successPage();
@@ -326,7 +327,7 @@ function incorrectAnswer(){
     // Clear "Incorrect" Message After 1 Second
     setTimeout(function(){
         incorrectText.textContent = null;
-        body.setAttribute("style", "background-color: white;")
+
     }, 1000);
 
     // Subtract 10 Seconds from Score
