@@ -3,11 +3,12 @@
 //////////////////////////
 
 // OPENING ELEMENTS //
-var buttonEl = document.createElement("button"); // ....START BUTTON
+var startButtonEl = document.createElement("button"); //ANSWER BUTTONS
+var buttonEl = document.createElement("button"); // ....ANSWER BUTTONS
 var h1El = document.createElement("h1"); //.............HEADLINES
 var h2El = document.createElement("h2"); //.............QUESTIONS/CONTENT
 var body = document.body; //............................<BODY>
-var pTag = document.createElement("p"); //..............<P> TAG
+var pTagStart = document.createElement("p"); //.........<P> TAG at Start
 
 // QUESTION/ANSWER ELEMENTS
 var currentQuestion; //.................................CURRENT QUESTION
@@ -15,27 +16,28 @@ var answerButton = document.createElement("button"); // POSSIBLE ANSWER BUTTONS
 var humanAnswer; //.....................................HUMAN ANSWER
 var correctText = document.createElement("h3"); //......CORRECT ANSWER 
 var incorrectText = document.createElement("h3"); //....INCORRECT ANSWERS
-var questionInx = 0; //.................................QUESTION INDEX NUMBER
+var questionInx = 30; //.................................QUESTION INDEX NUMBER
+var pTag = document.createElement("p"); //..............<P> TAG
 
 // TIME/SCORE ELEMENTS
 var startTimer; //......................................TIMER FUNCTION HOLDER
 var timerEl = document.createElement("p"); //...........TIMER ELEMENT
-var counter = 30; //....................................TIMER COUNT
-var score = 30; //......................................DISPLAYED SCORE
+var counter; //....................................TIMER COUNT
+var score; //......................................DISPLAYED SCORE
 var scoreDisplay //.....................................DISPLAYED SCORE
-
-// FORM ELEMENTS
-var formEl = document.createElement("form"); //.........FORM ELEMENT
-var inputEl = document.createElement("input"); //.........FORM ELEMENT
 
 // COMPLETION CONTENT
 var successDisplay = document.createElement("h4"); //...COMPLETION HEADLINE
-var successSubtext = document.createElement("h5")
+var successSubtext = document.createElement("h5"); //...COMPLETION SUBHEAD
+var formEl = document.createElement("form"); //.........FORM ELEMENT
+var inputEl = document.createElement("input"); //.......FORM ELEMENT
+var formButton = document.createElement("button"); //...FORM BUTTON
 
 // FAILURE CONTENT
 var failText = document.createElement("h4"); //.........FAILURE HEADLINE
 var failSubText = document.createElement("h5"); //......FAILURE SUBTEXT
 var tryAgain = document.createElement("button") //......TRY AGAIN BUTTON
+var aLink = document.createElement("a"); //.............<a></a>
 
 // PRIMARY ELEMENT IDS //
 var headlineID = document.getElementById("headline"); //HEADLINE ID
@@ -118,43 +120,61 @@ var questionArray = [question1, question2, question3, question4, question5];
 /////////////////
 // QUIZ STARTS //
 /////////////////
+startQuiz();
 
+//function quizStart(){
+function startQuiz(){
+
+// Clear Previous Content
+headlineID.innerHTML=""
+contentID.innerHTML=""
+buttonsID.innerHTML=""
+resultID.innerHTML=""
+timerID.innerHTML=""
+body.setAttribute("style", "background-color: white");
+
+// Resets Previous Scores
+i=0;
+counter=30;
+questionInx=0;
+
+// Displays Starting Score
 displayScore()
-
-// Clear Old Content in Case This Is User's 'Try Again'//
-headlineID.innerHTML="";
-contentID.innerHTML="";
-buttonsID.innerHTML="";
-resultID.innerHTML="";
 
 // Starting Text Content and Button
 h1El.textContent = "The Hardest Quiz on Earth";
 h2El.textContent = "Click 'Start Quiz' and try to answer the questions within the time limit. Any question you answer wrong will penalize you by 5 seconds.";
-buttonEl.textContent = "Start Quiz";
+startButtonEl.textContent = "Start Quiz";
 
 // Load Starting Text and Button Into Elements 
 headlineID.appendChild(h1El);
 contentID.appendChild(h2El);
-contentID.appendChild(pTag);
-pTag.appendChild(buttonEl);
+contentID.appendChild(pTagStart);
+pTagStart.appendChild(startButtonEl);
 
-// Click Start Button to Start First Question
-buttonEl.addEventListener("click", displayQuestion);
+// Starts First Question AAfter Clicking Start Button
+startButtonEl.addEventListener("click", displayQuestion);
 
-// Timer Starts After Clicking Start Button //
-buttonEl.addEventListener("click", startTimer);
+// Starts Timer Countdown After Clicking Start Button //
+startButtonEl.addEventListener("click", startTimer);
+
+};
 
 ////////////////////
-// TIMER FUNCTION //
+// TIMER ELEMENTS //
 ////////////////////
+
+// TIMER FUNCTION
 
 function startTimer() {
     counter = 30
     interval = setInterval(function() {
         counter--;
 
+        //Activates Countdown in Timer Display Function
         displayScore()
         
+        //If Countdown Reaches 0, Activate Failure Content
         if (counter <= 0) {
             clearInterval(interval);
             timerID.innerHTML="";
@@ -162,6 +182,7 @@ function startTimer() {
 
     }}, 1000)
     
+    return counter
 };
 
 // TIMER DISPLAY
@@ -169,12 +190,14 @@ function startTimer() {
 function displayScore(){
     timerEl.textContent = counter;
     timerEl.setAttribute("style", "color:blue;")
-    console.log(score);
     timerID.appendChild(timerEl);
+
+    //If Countdown Reaches 0, Clear Timer Display
     if (counter <= 0) {
         timerID.innerHTML="";
-        failure();
-    } else if (counter < 11){
+        //pTag.setAttribute("style", "visibility:hidden")
+    //When Timer Reaches 10, Change Font Color to Red
+    } else if (counter < 4){
         timerEl.setAttribute("style", "color:red;")
     } 
     //timerEl.appendChild(counter);
@@ -182,23 +205,21 @@ function displayScore(){
 
 
 //////////////////////////////////////////////////////////
-// QUESTIONS DISPLAY 
+// QUESTION DISPLAY 
 //////////////////////////////////////////////////////////
 
 function displayQuestion(){
-    //e.preventDefault();
 
-    //Clear Old Content//
-    buttonEl.setAttribute("style", "display:none;");
-
-    //After User Completes Last Question, Take Them to Success Page//
+    pTagStart.innerHTML=""
+    
+    //After User Completes Last Question, Activate Success Function//
     if (questionInx >= questionArray.length){
         successPage();
-    } else if (counter <= 0){
-        failure();
-        buttonsID.innerHTML="";
-    } else {
+    
+    //If Counter Reaches 0, Clear All Buttons// - NOT WORKING
 
+    } else {
+        
         // Cycles Through Question Objects
         currentQuestion = questionArray[questionInx]
         
@@ -211,18 +232,25 @@ function displayQuestion(){
 
         // Clear Old Buttons to Make Way for New//
         pTag.innerHTML="";
+        buttonsID.appendChild(pTag);
 
-        // Loop New Buttons on Current Question//
-        for(var i = 0; i < currentQuestion.possibleAnswers.length; i++){
+        //pTag.setAttribute("style", "display:hidden")
+        displayLoop()
 
-            answerButton = document.createElement("button");
-            answerButton.textContent = currentQuestion.possibleAnswers[i];
-            buttonsID.appendChild(pTag);
-            pTag.appendChild(answerButton);
-            answerButton.setAttribute("value", currentQuestion.possibleAnswers[i]);
-        };
+    };     
+
+};
+
+// Loop New Buttons on Current Question//
+function displayLoop(){
+
+    for(var i = 0; i < currentQuestion.possibleAnswers.length; i++){
+        answerButton = document.createElement("button");
+        answerButton.textContent = currentQuestion.possibleAnswers[i];
+        answerButton.setAttribute("value", currentQuestion.possibleAnswers[i]);
+        pTag.appendChild(answerButton);
+        
     };
-
 };
     
 //User Chooses Answer//
@@ -262,10 +290,10 @@ function correctAnswer(){
     resultID.innerHTML="";
     
     // Message: Incorrect Below Content - Fades Off.
-    var opacity = 100;
     correctText.textContent = "CORRECT!";
+    correctText.setAttribute("style", "color:green");
     resultID.appendChild(correctText);
-    correctText.setAttribute("style", "opacity:" + opacity)
+    
     
     // Clear "Correct" Message After 1 Second
     setTimeout(function(){
@@ -291,11 +319,14 @@ function incorrectAnswer(){
 
     // Message: Incorrect Below Content - Fades Off
     incorrectText.textContent = "INCORRECT!";
+    incorrectText.setAttribute("style", "color:white;")
+    body.setAttribute("style", "background-color: orangered;")
     resultID.appendChild(incorrectText);
     
     // Clear "Incorrect" Message After 1 Second
     setTimeout(function(){
         incorrectText.textContent = null;
+        body.setAttribute("style", "background-color: white;")
     }, 1000);
 
     // Subtract 10 Seconds from Score
@@ -319,10 +350,9 @@ function successPage(){
     // Stops Clock//
     clearTimeout(interval);
 
-    // Stops Clock and Records Final Score
+    // Records Final Score
     finalScore = counter;
     console.log("Final Score: " + finalScore);
-    clearTimeout(interval);
 
     // Clears All Onscreen Content
     headlineID.innerHTML = "";
@@ -330,46 +360,35 @@ function successPage(){
     buttonsID.innerHTML = "";
     resultID.innerHTML = "";
 
-    // Page Design and Message: Tells User to Record Score
-    body.setAttribute("style", "background-color: green");
+    // Textify Success Display Elements and Add Color
     successDisplay.textContent = "RECORD YOUR SCORE!";
     successDisplay.setAttribute("style", "color:white;");
     successSubtext.textContent = "Fill in Your Name!";
     successSubtext.setAttribute("style", "color:white;");
-    timerEl.setAttribute("style", "color:white;")
-    
 
-    // Enter Name
+    // Change Background Color to Green and Timer Color to White
+    body.setAttribute("style", "background-color: green");
+    timerEl.setAttribute("style", "color:white;")
+
+    // Load Success Headline and Subtext
     headlineID.appendChild(successDisplay);
     contentID.appendChild(successSubtext);
+
+    // Load Form
     resultID.appendChild(formEl);
     formEl.appendChild(inputEl);
-    inputEl.setAttribute("placeholder", "Patrick Mahomes");
-    inputEl.setAttribute("style", "width:200; height:100");
+    inputEl.setAttribute("placeholder", "Andy Greenhaw");
+
     console.log("Made it");
-/*
-    <form class="form">
-                    <div class="form-group">
-                        <h4><label for="formGroupExampleInput">Name</label></h4>
-                        <input type="text" class="form-control" id="formGroupExampleInput" placeholder="George Washington">
-                    </div>
-                    <div class="form-group">
-                        <h4><label for="formGroupExampleInput2">Email</label></h4>
-                        <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="gwash@gmail.com">
-                    </div>
-                    <div class="form-group">
-                        <h4><label for="formGroupExampleInput2">How Can I Help?</label></h4>
-                        <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Message">
-                    </div>
-                </form>
-*/
+
+    formButton
 
 };
 
 //////////////////////////////////////////////////////////
 // FAILURE PAGE //
 //////////////////////////////////////////////////////////
-function failure() {
+function failure(){
     
     // Stops Clock//
     clearTimeout(interval);
@@ -389,20 +408,37 @@ function failure() {
     failSubText.textContent = "Sorry, but you ran out of time.";
     tryAgain.textContent = "Try Again?";
     body.setAttribute("style", "background-color:red;")
+
+    //Load Text
     contentID.appendChild(failText);
     contentID.appendChild(failSubText);
-    resultID.appendChild(pTag)
-    buttonsID.appendChild(tryAgain);
-    pTag.setAttribute("style", "text-align: center");
 
-    // Button: Try Again
-    resultID.addEventListener("click", function(e){
-        reset()
+    //Load Buttons
+    resultID.appendChild(tryAgain);
+    //tryAgain.appendChild(aLink);
+    //aLink.setAttribute("href", "index.html");
+    
+    //Button: Try Again
+    tryAgain.addEventListener("click", function(e){
+    //body.innerHTML="";
+    startQuiz();
     });
 };
 
 
+/////////////////////
+// TRY AGAIN FUNCTION
+/////////////////////
 
+// Resets Previous Score
+function tryAgain(){
+    i=0;
+    counter=30;
+    questionInx=0;
+    displayQuestion();
+};
+
+//};
 
 
 
