@@ -30,8 +30,10 @@ var scoreDisplay //.....................................DISPLAYED SCORE
 var successDisplay = document.createElement("h4"); //...COMPLETION HEADLINE
 var successSubtext = document.createElement("h5"); //...COMPLETION SUBHEAD
 var formEl = document.createElement("form"); //.........FORM ELEMENT
-var inputEl = document.createElement("input"); //.......FORM ELEMENT
-var formButton = document.createElement("button"); //...FORM BUTTON
+var inputEl = document.createElement("input"); //.......FORM INPUT
+var userScore = document.createElement("input"); //.......FORM INPUT
+var formButton = document.createElement("button"); //...FORM SUBMIT BUTTON
+var pSuccess = document.createElement("p"); //..........FORM <p>
 
 // FAILURE CONTENT
 var failText = document.createElement("h4"); //.........FAILURE HEADLINE
@@ -216,6 +218,8 @@ function displayQuestion(){
     //After User Completes Last Question, Activate Success Function//
     if (questionInx >= questionArray.length){
         successPage();
+        finalScore = counter;
+
     
     //If Counter Reaches 0, Clear All Buttons// - NOT WORKING
 
@@ -271,9 +275,6 @@ buttonsID.addEventListener("click", function(e){
             incorrectAnswer();
         };
         
-        // console.log(humanAnswer);
-        //  console.log(currentQuestion);
-        
     };
 
 });
@@ -320,7 +321,7 @@ function incorrectAnswer(){
 
     // Message: Incorrect Below Content - Fades Off
     incorrectText.textContent = "INCORRECT!";
-    incorrectText.setAttribute("style", "color:white;")
+    incorrectText.setAttribute("style", "color:red;")
     body.setAttribute("style", "background-color: orangered;")
     resultID.appendChild(incorrectText);
     
@@ -342,49 +343,7 @@ function incorrectAnswer(){
     
 };
 
-//////////////////////////////////////////////////////////
-// SUCCESS PAGE //
-//////////////////////////////////////////////////////////
 
-function successPage(){
-
-    // Stops Clock//
-    clearTimeout(interval);
-
-    // Records Final Score
-    finalScore = counter;
-    console.log("Final Score: " + finalScore);
-
-    // Clears All Onscreen Content
-    headlineID.innerHTML = "";
-    contentID.innerHTML = "";
-    buttonsID.innerHTML = "";
-    resultID.innerHTML = "";
-
-    // Textify Success Display Elements and Add Color
-    successDisplay.textContent = "RECORD YOUR SCORE!";
-    successDisplay.setAttribute("style", "color:white;");
-    successSubtext.textContent = "Fill in Your Name!";
-    successSubtext.setAttribute("style", "color:white;");
-
-    // Change Background Color to Green and Timer Color to White
-    body.setAttribute("style", "background-color: green");
-    timerEl.setAttribute("style", "color:white;")
-
-    // Load Success Headline and Subtext
-    headlineID.appendChild(successDisplay);
-    contentID.appendChild(successSubtext);
-
-    // Load Form
-    resultID.appendChild(formEl);
-    formEl.appendChild(inputEl);
-    inputEl.setAttribute("placeholder", "Andy Greenhaw");
-
-    console.log("Made it");
-
-    formButton
-
-};
 
 //////////////////////////////////////////////////////////
 // FAILURE PAGE //
@@ -418,7 +377,11 @@ function failure(){
     resultID.appendChild(tryAgain);
     //tryAgain.appendChild(aLink);
     //aLink.setAttribute("href", "index.html");
-    
+
+/////////////////////
+// TRY AGAIN BUTTON
+/////////////////////
+
     //Button: Try Again
     tryAgain.addEventListener("click", function(e){
     //body.innerHTML="";
@@ -426,29 +389,95 @@ function failure(){
     });
 };
 
+//////////////////////////////////////////////////////////
+// SUCCESS PAGE //
+//////////////////////////////////////////////////////////
 
-/////////////////////
-// TRY AGAIN FUNCTION
-/////////////////////
+function successPage(){
 
-// Resets Previous Score
-function tryAgain(){
-    i=0;
-    counter=30;
-    questionInx=0;
-    displayQuestion();
+    // Stops Clock//
+    clearTimeout(interval);
+
+    // Clears All Onscreen Content
+    headlineID.innerHTML = "";
+    contentID.innerHTML = "";
+    buttonsID.innerHTML = "";
+    resultID.innerHTML = "";
+
+    // Textify Success Display Elements and Add Color
+    successDisplay.textContent = "RECORD YOUR SCORE!";
+    successDisplay.setAttribute("style", "color:white;");
+    successSubtext.textContent = "Fill in Your Name!";
+    successSubtext.setAttribute("style", "color:white;");
+
+    // Change Background Color to Green and Timer Color to White
+    body.setAttribute("style", "background-color: green");
+    timerEl.setAttribute("style", "color:white;")
+
+    // Load Success Headline and Subtext
+    headlineID.appendChild(successDisplay);
+    contentID.appendChild(successSubtext);
+
+    // Load Form
+    resultID.appendChild(formEl);
+    formEl.appendChild(inputEl);
+    inputEl.setAttribute("placeholder", "Andy Greenhaw");
+    inputEl.setAttribute("id", "name")
+    // Load Submission BUtton
+    resultID.appendChild(pSuccess);
+    pSuccess.appendChild(formButton);
+    //formButton.setAttribute("id", "formButton");
+    formButton.textContent = "Submit Score";
+    
+    formButton.addEventListener("click", addPlayerToList);
 };
 
-//};
+function addPlayerToList(e) {
+    e.preventDefault();
+    
+    headlineID.clear = "";
+    successSubtext.innerHTML = "";
+    buttonsID.innerHTML = "";
+    resultID.innerHTML = "";
+    timerID.innerHTML = "";
 
 
+    var username = inputEl.value;
+    console.log(username);
+    
+    localStorage.setItem("finalScore", finalScore);
+    localStorage.setItem("userName", username);
 
+    highScoreDisplay(e);
 
+};
 
+// Cannot get this to work...
 
+function highScoreDisplay(e) {
+    e.preventDefault();
+    
+    headlineID.innerHTML=""
+    contentID.innerHTML=""
+    buttonsID.innerHTML=""
+    resultID.innerHTML=""
+    timerID.innerHTML=""
 
+    var finalScoreRecord = localStorage.getItem("finalScore");
+    var userNameRecord = localStorage.getItem("userName");
 
+    userNameRecord.textContent;
 
+    highScoreRecordOverall = (userNameRecord + "....." + finalScoreRecord);
+    highScoreRecordOverall.textContent;
+    console.log(highScoreRecordOverall);
 
+    var olEl = document.createElement("ol")
+    var liEl = document.createElement("ol")
 
+    document.body.appendChild(olEl);
+    olEl.appendChild(highScoreRecordOverall);
+    
+        
+};
 
